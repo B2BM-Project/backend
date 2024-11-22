@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test - Create & Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .form-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 300px;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 8px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #218838;
+        }
+        .output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>API Test - Create & Login</h1>
+
+    <!-- Create User Form -->
+    <div class="form-container">
+        <h2>Create User</h2>
+        <input type="text" id="create-username" placeholder="Username" required>
+        <input type="password" id="create-password" placeholder="Password" required>
+        <input type="email" id="create-email" placeholder="Email" required>
+        <button onclick="createUser()">Create User</button>
+    </div>
+
+    <!-- Login Form -->
+    <div class="form-container">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button onclick="loginUser()">Login</button>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="form-container">
+        <button onclick="logoutUser()">Logout</button>
+    </div>
+
+    <!-- JWT Verification -->
+    <div class="form-container">
+        <h2>Verify Token</h2>
+        <input type="text" id="jwt-token" placeholder="JWT Token" required>
+        <button onclick="verifyToken()">Verify Token</button>
+    </div>
+
+    <div class="output">
+        <h2>Output</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        const apiBaseUrl = 'http://localhost:5100';
+
+        // Function to create a user
+        async function createUser() {
+            const username = document.getElementById('create-username').value;
+            const password = document.getElementById('create-password').value;
+            const email = document.getElementById('create-email').value;
+
+            const response = await fetch(`${apiBaseUrl}/create`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password, email }),
+            });
+
+            const result = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+        }
+
+        // Function to login
+        async function loginUser() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            const response = await fetch(`${apiBaseUrl}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
+
+            const result = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+
+            // Save token to localStorage if login is successful
+            if (result.token) {
+                localStorage.setItem('jwtToken', result.token);
+                alert('Token saved to localStorage!');
+            }
+        }
+
+        // Function to logout
+        async function logoutUser() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                alert('You are not logged in!');
+                return;
+            }
+
+            const response = await fetch(`${apiBaseUrl}/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const result = await response.json();
+            document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+
+            // Remove JWT Token from localStorage after logout
+            localStorage.removeItem('jwtToken');
+            alert('You have logged out successfully!');
+        }
+
+        // Function to verify JWT token
+        async function verifyToken() {
+            const token = document.getElementById('jwt-token').value;
+
+            try {
+                const response = await fetch(`${apiBaseUrl}/verify`, {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                });
+
+                const result = await response.json();
+                document.getElementById('output').innerText = JSON.stringify(result, null, 2);
+            } catch (error) {
+                document.getElementById('output').innerText = 'Error verifying token: ' + error.message;
+            }
+        }
+    </script>
+
+</body>
+</html>
