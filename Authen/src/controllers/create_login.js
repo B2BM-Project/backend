@@ -34,8 +34,8 @@ const createUser = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             connection.query(
-                "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
-                [username, hashedPassword, email],
+                "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
+                [username, hashedPassword, email, 2], // role = 2 กำหนดค่าคงที่
                 (err, results) => {
                     if (err) {
                         console.error("Error while inserting into users table:", err);
@@ -51,6 +51,7 @@ const createUser = async (req, res) => {
         return res.status(500).json({ message: 'Error processing request.' });
     }
 };
+
 
 // ระบบ login //
 const loginUser = async (req, res) => {
