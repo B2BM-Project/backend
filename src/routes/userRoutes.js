@@ -2,12 +2,14 @@ const express = require('express');
 const router = express.Router();
 const detail = require('../controllers/detail');
 const propositionController = require('../controllers/proposition');
+const card = require('../controllers/card');
 
 router.get('/proposition', propositionController.getAllPropositions);
 router.get('/proposition/:id', propositionController.getPropositionById);
 router.post('/proposition', propositionController.createProposition);
 router.put('/proposition/:id', propositionController.updateProposition);
 router.delete('/proposition/:id', propositionController.deleteProposition);
+router.get('/card', card.cardDetail);
 
 
 // เส้นทางสำหรับตรวจสอบ JWT /users/verify
