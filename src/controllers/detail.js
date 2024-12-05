@@ -294,6 +294,17 @@ const data = [
                 sub: "เมื่อผู้โจมตีส่งค่าพารามิเตอร์ id ที่เป็นอันตราย เช่นเดียวกับตัวอย่างในสถานการณ์แรก ระบบจะเปลี่ยน Query ให้ดึงข้อมูลทั้งหมดจากตาราง accounts หรืออาจมีผลที่ร้ายแรงกว่า เช่น การแก้ไขหรือการลบข้อมูล หรือการเรียกใช้ Stored Procedures", 
                 img: "https://65015017.gitlab.io/-/picture/-/jobs/8495694939/artifacts/public/6.png" 
             },
+        ],
+        proposition: [
+            {
+                sub: "โจทย์ ljfsljfsldjf;ajfljalfjal;jflasjlafslfjlsadjffjlsadfj;adj",
+            },
+            {
+                sub: "โจทย์ หดหกด1หกด16ห1ด6ดหกดดหาก่ดสหก",
+            },
+            {
+                sub: "โจทย์ lfa;sdlfjda;jfa;fja;sjfda;sjfllllllllllllllljkdfsjldfjlsjfldsjfldjfld",
+            }
         ]
     },
     {
