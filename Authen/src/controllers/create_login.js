@@ -35,7 +35,7 @@ const createUser = async (req, res) => {
 
             connection.query(
                 "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
-                [username, hashedPassword, email, 2], // role = 2 กำหนดค่าคงที่
+                [username, hashedPassword, email, "user"], // role = 2 กำหนดค่าคงที่
                 (err, results) => {
                     if (err) {
                         console.error("Error while inserting into users table:", err);
@@ -148,9 +148,46 @@ const verifyToken = (req, res) => {
     });
 };
 
+
+
+
+// ดึงข้อมูลผู้ใช้ตาม ID
+// ดึงข้อมูลผู้ใช้ตาม ID
+const getUserById = async (req, res) => {
+    const { id } = req.params; // รับค่า id จาก URL parameter
+
+    if (!id) {
+        return res.status(400).json({ message: 'User ID is required.' });
+    }
+
+    try {
+        connection.query(
+            "SELECT user_id, username, email, display_name, profile_img, role, total_score, certificate_name, member_since FROM users WHERE user_id = ?",
+            [id],
+            (err, results) => {
+                if (err) {
+                    console.error("Error querying the database", err);
+                    return res.status(500).json({ message: 'Error processing request.' });
+                }
+
+                if (results.length === 0) {
+                    return res.status(404).json({ message: 'User not found.' });
+                }
+
+                const user = results[0];
+                return res.status(200).json({ user });
+            }
+        );
+    } catch (error) {
+        console.error("Error retrieving user", error);
+        return res.status(500).json({ message: 'Error processing request.' });
+    }
+};
+
 module.exports = {
     createUser,
     loginUser,
     logoutUser,
     verifyToken,
+    getUserById, // เพิ่มฟังก์ชันใหม่ใน exports
 };

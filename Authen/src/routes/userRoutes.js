@@ -18,4 +18,7 @@ router.post('/logout', create_login.logoutUser);  // เพิ่มเส้น
 // เส้นทางสำหรับ /users/test ที่เรียกใช้ฟังก์ชัน testApi
 router.get('/test', test.testApi);
 
+// เส้นทางค้นหา user ด้วย id
+router.get('/users/:id', create_login.getUserById);
+
 module.exports = router;
