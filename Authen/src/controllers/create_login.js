@@ -60,7 +60,6 @@ const loginUser = async (req, res) => {
     if (!username || !password) {
         return res.status(400).json({ message: 'Username and password are required.' });
     }
-
     try {
         connection.query(
             "SELECT * FROM users WHERE username = ?",
