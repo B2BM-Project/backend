@@ -1,8 +1,7 @@
 pipeline {
     agent {label 'db-server'}
     environment {
-        APP_NAME = "
-        Repo_NAME = ""
+        APP_NAME = "Test Node"
     }
     stages {
         stage('Clone GitHub Repository') {
