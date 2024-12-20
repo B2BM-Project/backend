@@ -2,7 +2,7 @@ const db = require('../config/database');
 
 // ดึงข้อมูลทั้งหมด
 exports.getAllPropositions = (req, res) => {
-    const query = 'SELECT * FROM PROPOSITION';
+    const query = 'SELECT * FROM proposition';
     db.query(query, (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json(results);
@@ -12,7 +12,7 @@ exports.getAllPropositions = (req, res) => {
 // ดึงข้อมูลเฉพาะ ID
 exports.getPropositionById = (req, res) => {
     const { id } = req.params;
-    const query = 'SELECT * FROM PROPOSITION WHERE Proposition_id = ?';
+    const query = 'SELECT * FROM proposition WHERE Proposition_id = ?';
     db.query(query, [id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.length === 0) return res.status(404).json({ message: 'Proposition not found' });
@@ -23,7 +23,7 @@ exports.getPropositionById = (req, res) => {
 // เพิ่มข้อมูล
 exports.createProposition = (req, res) => {
     const { Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File } = req.body;
-    const query = 'INSERT INTO PROPOSITION (Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO proposition (Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
     db.query(query, [Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         res.status(201).json({ message: 'Proposition created successfully', id: results.insertId });
@@ -34,7 +34,7 @@ exports.createProposition = (req, res) => {
 exports.updateProposition = (req, res) => {
     const { id } = req.params;
     const { Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File } = req.body;
-    const query = 'UPDATE PROPOSITION SET Proposition_name = ?, Proposition_detail = ?, Proposition_detail_img = ?, Type_id = ?, Level = ?, Catagory = ?, Flag = ?, Score = ?, File = ? WHERE Proposition_id = ?';
+    const query = 'UPDATE proposition SET Proposition_name = ?, Proposition_detail = ?, Proposition_detail_img = ?, Type_id = ?, Level = ?, Catagory = ?, Flag = ?, Score = ?, File = ? WHERE Proposition_id = ?';
     db.query(query, [Proposition_name, Proposition_detail, Proposition_detail_img, Type_id, Level, Catagory, Flag, Score, File, id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.affectedRows === 0) return res.status(404).json({ message: 'Proposition not found' });
@@ -45,7 +45,7 @@ exports.updateProposition = (req, res) => {
 // ลบข้อมูล
 exports.deleteProposition = (req, res) => {
     const { id } = req.params;
-    const query = 'DELETE FROM PROPOSITION WHERE Proposition_id = ?';
+    const query = 'DELETE FROM proposition WHERE Proposition_id = ?';
     db.query(query, [id], (err, results) => {
         if (err) return res.status(500).json({ error: err.message });
         if (results.affectedRows === 0) return res.status(404).json({ message: 'Proposition not found' });

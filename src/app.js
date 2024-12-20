@@ -4,7 +4,7 @@ const userRoutes = require('./routes/userRoutes'); // นำเข้าเส�
 require('dotenv').config(); // โหลดไฟล์ .env
 
 const app = express();
-const port = 5100;
+const port = 3000;
 
 // เปิดใช้งาน CORS สำหรับทุกคำขอ (สามารถจำกัดได้ตามต้องการ)
 app.use(cors());
@@ -24,5 +24,5 @@ app.use((err, req, res, next) => {
 app.use('/', userRoutes);
 
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://${process.env.DB_HOST}:${port}`);
 });
