@@ -18,7 +18,8 @@ pipeline {
                     pwd
                     if [ -d "backend" ]; then
                         rm -rf backend
-                    git clone https://github.com/B2BM-Project/backend.git
+                    fi
+                    git clone https://$githubUser:$githubToken@github.com/B2BM-Project/backend.git
                     '''
                 }
             }
