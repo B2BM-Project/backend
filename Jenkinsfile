@@ -14,6 +14,8 @@ pipeline {
                     )
                 ]) {
                     sh '''
+                    cd ~
+                    pwd
                     git clone https://github.com/B2BM-Project/backend.git
                     '''
                 }
