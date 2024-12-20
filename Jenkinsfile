@@ -8,9 +8,9 @@ pipeline {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'github-id', // อ้างอิงถึง Credentials ที่เพิ่มไว้
-                        usernameVariable: 'githubUser', // ตัวแปรสำหรับ username
-                        passwordVariable: 'githubToken' // ตัวแปรสำหรับ PAT
+                        credentialsId: 'github-admin',
+                        usernameVariable: 'githubUser',
+                        passwordVariable: 'githubToken'
                     )
                 ]) {
                     sh '''
