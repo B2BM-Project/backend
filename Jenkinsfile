@@ -16,6 +16,8 @@ pipeline {
                     sh '''
                     cd ~
                     pwd
+                    if [ -d "backend" ]; then
+                        rm -rf backend
                     git clone https://github.com/B2BM-Project/backend.git
                     '''
                 }
