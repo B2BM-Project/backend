@@ -1,2 +1,2 @@
 ## ติดตั้งแพ็กเกจ
-- npm install express cors bcrypt jsonwebtoken dotenv mysql
+- npm install bcrypt cors dotenv express express-validator jsonwebtoken mysql mysql2 nodemon
