@@ -19,7 +19,7 @@ pipeline {
                     if [ -d "backend" ]; then
                         rm -rf backend
                     fi
-                    git clone https://github.com/B2BM-Project/backend.git
+                    git clone -b test-pipeline https://github.com/B2BM-Project/backend.git
                     '''
                 }
             }
