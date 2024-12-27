@@ -5,7 +5,7 @@ const connection = require('../config/database');
 // Secret key สำหรับ JWT
 const secretKey = process.env.JWT_SECRET || 'mysecretkey'; // หากไม่มีใน .env จะใช้ค่าดีฟอลต์
 
-// ตัวแปรสำหรับเก็บ blacklist ของ token (สามารถใช้ Redis หรือฐานข้อมูลได้)
+// ตัวแปรสำหรับเก็บ blacklist ของ token (สามารถใช้ Redis หรือฐานข้อปๆๆปมูลได้)
 let tokenBlacklist = [];
 
 // ระบบ signup //
