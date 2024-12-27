@@ -6,7 +6,7 @@ const propositionController = require('../controllers/proposition')
 const detail = require('../controllers/detail')
 const room = require('../controllers/roomController')
 const { upload, uploadFiles, showPublicFiles } = require('../controllers/taskController');
-
+const card = require('../controllers/card');
 
 // เส้นทางสำหรับสร้างผู้ใช้ใหม่ /users/create
 router.post('/register', create_login.createUser);
@@ -42,5 +42,6 @@ router.post('/upload', upload.array('multiFile', 2), uploadFiles);
 
 // Route for showing files in the public directory
 router.get('/public', showPublicFiles);
+router.get('/card', card.cardDetail);
 
 module.exports = router;
