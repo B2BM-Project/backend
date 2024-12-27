@@ -882,7 +882,7 @@ const getById = (req, res) => {
     }
 
     return res.status(200).json({
-        topic_detail: topic
+        topic_detail: [topic]
     });
 };
 
