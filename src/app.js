@@ -4,13 +4,14 @@ const userRoutes = require('./routes/userRoutes'); // นำเข้าเส�
 require('dotenv').config(); // โหลดไฟล์ .env
 
 const app = express();
-const port = 5100;
+const port = 3000;
 
 // เปิดใช้งาน CORS สำหรับทุกคำขอ (สามารถจำกัดได้ตามต้องการ)
 app.use(cors());
 
 // Middleware สำหรับการจัดการข้อมูล JSON
 app.use(express.json());
+app.use(express.static('public')); 
 
 // Middleware สำหรับจัดการข้อผิดพลาดจาก JSON ที่ไม่ถูกต้อง
 app.use((err, req, res, next) => {
