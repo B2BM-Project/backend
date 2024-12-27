@@ -29,5 +29,10 @@ pipeline {
                 sh 'npm install'
             }
         }
+        stage('Run API Server') {
+            steps {
+                sh 'node src/app.js'
+            }
+        }
     }
 }
