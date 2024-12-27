@@ -31,7 +31,7 @@ pipeline {
         }
         stage('Run API Server') {
             steps {
-                sh 'nohup node src/app.js > app.log 2>&1 &'
+                sh 'npm run dev'
             }
         }
     }
