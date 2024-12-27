@@ -9,7 +9,7 @@ const { upload, uploadFiles, showPublicFiles } = require('../controllers/taskCon
 
 
 // เส้นทางสำหรับสร้างผู้ใช้ใหม่ /users/create
-router.post('/create', create_login.createUser);
+router.post('/register', create_login.createUser);
 
 // เส้นทางสำหรับ login ผู้ใช้ /users/login
 router.post('/login', create_login.loginUser);
