@@ -1,1 +1,0 @@
-ssh -i "C:\Users\Br0wny\Desktop\d2bm.pem" ubuntu@13.250.104.185
