@@ -37,6 +37,7 @@ router.get('/detail', detail.getAll);
 
 
 router.post('/rooms', room.createRoom);
+router.get('/lobby-room/:id', room.getRoomById);
 
 router.post('/upload', upload.array('multiFile', 2), uploadFiles);
 
