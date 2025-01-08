@@ -69,23 +69,32 @@ exports.deleteProposition = (req, res) => {
     });
 };
 
-// ตรวจสอบ flag
+
+
+// Check Flag
+// Check Flag
 exports.checkFlag = async (req, res) => {
-    const { id } = req.params;
-    const { Flag } = req.body;
+    const { id, flag } = req.body; // รับ Proposition_id และ flag จาก request
 
-    const query = 'SELECT Flag FROM proposition WHERE Proposition_id = ?';
-    db.query(query, [id], async (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (results.length === 0) return res.status(404).json({ message: 'Proposition not found' });
+    // ตรวจสอบว่ามีการส่งข้อมูลครบถ้วนหรือไม่
+   
 
-        const hashedFlag = results[0].Flag;
-        const isMatch = await bcrypt.compare(Flag, hashedFlag);
+    try {
+        const query = 'SELECT Flag FROM proposition WHERE Proposition_id = ?';
+        db.query(query, [id], async (err, results) => {
+           
 
-        if (isMatch) {
-            res.json({ message: 'Flag is correct' });
-        } else {
-            res.status(400).json({ message: 'Flag is incorrect' });
-        }
-    });
+            const storedFlag = results[0].Flag;
+
+            // ใช้ bcrypt ในการเปรียบเทียบ flag
+            const isMatch = await bcrypt.compare(flag, storedFlag);
+            if (isMatch) {
+                return res.json({ message: 'Flag is correct' });
+            } else {
+                return res.status(401).json({ message: 'Flag is incorrect' });
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
