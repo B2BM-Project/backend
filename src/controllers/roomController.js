@@ -1,41 +1,174 @@
 const pool = require('../config/database');
+const { verifyToken, createToken } = require('./jwtHelper'); // นำเข้า jwtHelper
 
-// ฟังก์ชันสำหรับสร้างห้อง
+// สร้างห้องใหม่
 exports.createRoom = async (req, res) => {
     const { Room_name, Room_description, Room_password, status, duration } = req.body;
 
-    // ตรวจสอบค่าที่จำเป็นต้องมี
-    if (!Room_name || typeof Room_name !== 'string') {
-        return res.status(400).json({ message: 'Room_name is required and must be a string' });
+    // ดึง token จาก Authorization header
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization token is required' });
     }
 
     try {
-        // ใช้ destructuring เพื่อแยก rows จากการ execute คำสั่ง SQL
-        const result = await pool.query(
-            'INSERT INTO ROOM_LIST (Room_name, Room_description, Room_password, status, duration) VALUES (?, ?, ?, ?, ?)',
-            [
-                Room_name,
-                Room_description || null,
-                Room_password || null,
-                status != null ? status : 0, // ตรวจสอบว่ามีค่า status หรือไม่
-                duration != null ? duration : 0 // ตรวจสอบว่ามีค่า duration หรือไม่
-            ]
+        // ตรวจสอบและถอดรหัส JWT
+        const decoded = await verifyToken(token);
+        console.log('Decoded Token:', decoded);
+
+        const userId = decoded.userId;
+
+        // ตรวจสอบค่าที่จำเป็นต้องมี
+        if (!Room_name || typeof Room_name !== 'string') {
+            return res.status(400).json({ message: 'Room_name is required and must be a string' });
+        }
+
+        // ตรวจสอบว่าตาราง ROOM_LIST มีอยู่ในฐานข้อมูลหรือไม่
+        const [checkTable] = await pool.query(
+            "SELECT COUNT(*) AS tableCount FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'room_list'"
+        );
+        if (checkTable[0].tableCount === 0) {
+            return res.status(500).json({ message: 'ROOM_LIST table does not exist in the database' });
+        }
+
+        // ตรวจสอบและกำหนดค่าของ Room_description, Room_password, status และ duration
+        const roomDescription = Room_description && typeof Room_description === 'string' ? Room_description : null;
+        const roomPassword = Room_password && typeof Room_password === 'string' ? Room_password : null;
+        const roomStatus = (status != null && Number.isInteger(status)) ? status : 0;
+        const roomDuration = (duration != null && Number.isInteger(duration)) ? duration : 0;
+
+        // สร้างห้องในตาราง ROOM_LIST
+        const [result] = await pool.query(
+            'INSERT INTO room_list (Room_name, Room_description, Room_password, status, duration) VALUES (?, ?, ?, ?, ?)',
+            [Room_name, roomDescription, roomPassword, roomStatus, roomDuration]
         );
 
-        // ส่งผลลัพธ์การสร้างห้องกลับไป
+        const roomId = result.insertId;
+
+        // เพิ่มผู้ใช้ลงในตาราง attendance_to
+        await pool.query(
+            'INSERT INTO attendance_to (Room_id, User_id, Score, Owner) VALUES (?, ?, ?, ?)',
+            [roomId, userId, 0, 1] // Owner = 1 สำหรับผู้สร้างห้อง
+        );
+
+        // สร้าง roomToken
+        const roomToken = createToken({ userId, Room_id: roomId });
+
         res.status(201).json({
             message: 'Room created successfully',
-            roomName: Room_name, // name ของห้องที่สร้าง
+            roomId,
+            roomToken,
         });
     } catch (error) {
         console.error('Error creating room:', error);
 
-        // ตรวจสอบข้อผิดพลาดสำหรับการ debug
-        const errorMessage = error.code === 'ER_BAD_NULL_ERROR' ? 'Invalid input data' : error.message;
+        // กำหนดข้อความผิดพลาดตามประเภทของข้อผิดพลาด
+        let errorMessage = error.message;
+        if (error.code === 'ER_BAD_NULL_ERROR') {
+            errorMessage = 'Invalid input data';
+        } else if (error.code === 'ER_NO_SUCH_TABLE') {
+            errorMessage = 'The specified table does not exist in the database';
+        }
 
         res.status(500).json({
             message: 'Error creating room',
-            error: errorMessage
+            error: errorMessage,
+        });
+    }
+};
+
+// ดึง tasks โดยอ้างอิง Room_id
+exports.getTasksByRoomId = async (req, res) => {
+    const { id } = req.params; // รับ Room_id จาก route
+
+    try {
+        // ตรวจสอบว่า Room_id มีอยู่หรือไม่
+        const [roomExists] = await pool.query('SELECT * FROM room_list WHERE Room_id = ?', [id]);
+        if (roomExists.length === 0) {
+            return res.status(404).json({ message: 'Room not found' });
+        }
+
+        // ดึง tasks ทั้งหมดที่เกี่ยวข้องกับ Room_id
+        const [tasks] = await pool.query('SELECT * FROM task WHERE Room_id = ?', [id]);
+
+        res.status(200).json({
+            message: 'Tasks retrieved successfully',
+            tasks,
+        });
+    } catch (error) {
+        console.error('Error fetching tasks by Room_id:', error);
+        res.status(500).json({
+            message: 'Error fetching tasks by Room_id',
+            error: error.message,
+        });
+    }
+};
+
+// ดึง tasks โดยอ้างอิง Room_name และ Room_password
+// ดึง tasks โดยอ้างอิง Room_name และ Room_password
+exports.getTasksByRoomNameAndPassword = async (req, res) => {
+    const { Room_name, Room_password } = req.body;
+    const token = req.headers.authorization?.split(' ')[1]; 
+
+    if (!Room_name || !Room_password) {
+        return res.status(400).json({ message: 'Room_name and Room_password are required' });
+    }
+
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization token is required' });
+    }
+
+    try {
+        // ตรวจสอบ JWT
+        const decoded = await verifyToken(token);
+        const userId = decoded.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: 'Invalid user ID in token' });
+        }
+
+        // ตรวจสอบ Room_name และ Room_password
+        const [room] = await pool.query(
+            'SELECT * FROM room_list WHERE Room_name = ? AND Room_password = ?',
+            [Room_name, Room_password]
+        );
+
+        if (room.length === 0) {
+            return res.status(404).json({ message: 'Room not found or invalid credentials' });
+        }
+
+        const roomId = room[0].Room_id;
+
+        // ตรวจสอบว่า user มีอยู่ใน attendance_to หรือไม่
+        const [attendance] = await pool.query(
+            'SELECT * FROM attendance_to WHERE Room_id = ? AND User_id = ?',
+            [roomId, userId]
+        );
+
+        // ถ้าไม่มี user ใน attendance_to ให้เพิ่มเข้าไป
+        if (attendance.length === 0) {
+            await pool.query(
+                'INSERT INTO attendance_to (Room_id, User_id, Score, Owner) VALUES (?, ?, ?, ?)',
+                [roomId, userId, 0, 0]
+            );
+        }
+
+        // สร้าง roomToken ใหม่ที่มี roomId ที่อัปเดต
+        const roomToken = createToken({ userId, Room_id: roomId });
+
+        // ดึง tasks ที่เกี่ยวข้องกับ Room_id
+        const [tasks] = await pool.query('SELECT * FROM task WHERE Room_id = ?', [roomId]);
+
+        res.status(200).json({
+            message: 'Tasks retrieved successfully',
+            tasks,
+            roomToken, // ส่ง roomToken ใหม่ที่อัปเดต
+        });
+    } catch (error) {
+        console.error('Error fetching tasks by Room_name and Room_password:', error);
+        res.status(500).json({
+            message: 'Error fetching tasks',
+            error: error.message,
         });
     }
 };
