@@ -35,7 +35,7 @@ exports.createRoom = async (req, res) => {
         const roomDescription = Room_description && typeof Room_description === 'string' ? Room_description : null;
         const roomPassword = Room_password && typeof Room_password === 'string' ? Room_password : null;
         const roomStatus = (status != null && Number.isInteger(status)) ? status : 0;
-        const roomDuration = (duration != null && Number.isInteger(duration)) ? duration : 0;
+        const roomDuration = (duration != null && Number.isInteger(duration)) ? duration : 1;
 
         // สร้างห้องในตาราง ROOM_LIST
         const [result] = await pool.query(
