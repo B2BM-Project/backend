@@ -7,7 +7,7 @@ const secretKey = process.env.JWT_SECRET || 'mysecretkey'; // หากไม่
 const tokenBlacklist = new Set();
 
 // ฟังก์ชันสำหรับสร้าง JWT
-const createToken = (payload, expiresIn = '1h') => {
+const createToken = (payload, expiresIn = '6h') => {
     if (!payload.userId) {
         throw new Error('Payload must contain userId');
     }
