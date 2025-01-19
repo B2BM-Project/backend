@@ -13,29 +13,37 @@ function initializeSocket(server) {
     console.log("A user connected:", socket.id);
 
     // เมื่อผู้ใช้เข้าร่วมห้อง
-    socket.on("join_room", (roomId, user_id) => {
+    socket.on("join_room", (roomId, users) => {
       if (!rooms[roomId]) {
         rooms[roomId] = [];
       }
-      if (!rooms[roomId].includes(user_id)) {
-        rooms[roomId].push(user_id);
+      if (!rooms[roomId].some((user) => JSON.stringify(user) === JSON.stringify(users))) {
+        rooms[roomId].push(users);
       }
-
       socket.join(roomId);
       console.log(`User ${socket.id} joined room ${roomId}`);
       io.to(roomId).emit("user_joined", {
-        userId: rooms[roomId], //user in room
+        user: rooms[roomId], //user in room
         roomId,
+
       });
     });
 
-    socket.on("leave_room", (roomId, userId) => {
+    socket.on("leave_room", (roomId, users) => {
       if (rooms[roomId]) {
-        rooms[roomId] = rooms[roomId].filter((id) => id !== userId);
+        rooms[roomId] = rooms[roomId].filter((user) => user.user_id !== users.user_id);
         io.to(roomId).emit("user_joined", {
-          userId: rooms[roomId],
+          user: rooms[roomId],
         });
       }
+    });
+
+    // เมื่อผู้ใช้เปลี่ยนสถานะเป็น Ready หรือ Unready
+    socket.on("set_ready_status", ({ room, user, status }) => {
+      console.log(
+        `User ${user.username} in room ${room} is now ${status ? "Ready" : "Unready"}`
+      );
+      io.to(room).emit("update_ready_status", { user, status });
     });
 
     // เมื่อผู้ใช้ตัดการเชื่อมต่อ
