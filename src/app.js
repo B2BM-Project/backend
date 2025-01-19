@@ -2,12 +2,18 @@ const express = require('express');
 const cors = require('cors'); // นำเข้า CORS
 const userRoutes = require('./routes/userRoutes'); // นำเข้าเส้นทางการใช้งานผู้ใช้
 require('dotenv').config(); // โหลดไฟล์ .env
+const http = require("http");
+const initializeSocket = require("./controllers/socketController");
 
 const app = express();
 const port = 3000;
 
 // เปิดใช้งาน CORS สำหรับทุกคำขอ (สามารถจำกัดได้ตามต้องการ)
 app.use(cors());
+
+// เรียกใช้ Socket.IO
+const server = http.createServer(app);
+initializeSocket(server);
 
 // Middleware สำหรับการจัดการข้อมูล JSON
 app.use(express.json());
@@ -26,4 +32,8 @@ app.use('/', userRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+server.listen(3001, () => {
+    console.log(`Socket Server is running on http://localhost:3001`);
 });
