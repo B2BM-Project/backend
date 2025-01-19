@@ -33,6 +33,9 @@ router.get('/rooms/:id/tasks', room.getTasksByRoomId); // ต้องเพิ�
 // Route สำหรับดึง Task ของ Room โดยใช้ Room_name และ Room_password
 router.post('/rooms/tasks', room.getTasksByRoomNameAndPassword);
 
+//show room
+router.get('/rooms/showall', room.getAllRooms);
+
 // Route ส่ง flag
 router.post('/submitflag', play.submitFlag); //ยังติดเรื่องต้องส่ง id ของ task ตอนส่ง เเละ เข้ารหัส ก่อนนำไปเช็ค flag
 

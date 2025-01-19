@@ -218,3 +218,14 @@ exports.getTasksByRoomNameAndPassword = async (req, res) => {
     });
   }
 };
+
+// ดึงข้อมูลห้องทั้งหมด
+exports.getAllRooms = async (req, res) => {
+    try {
+        const [rooms] = await pool.query('SELECT * FROM room_list');
+        res.status(200).json({ rooms });
+    } catch (error) {
+        console.error('Error fetching rooms:', error);
+        res.status(500).json({ message: 'Error fetching rooms', error: error.message });
+    }
+};
