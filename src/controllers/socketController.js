@@ -27,7 +27,7 @@ function initializeSocket(server) {
       }
       socket.join(roomId);
       // console.log(`User ${socket.id} joined room ${roomId}`);
-      console.log(rooms, "###################");
+      // console.log( "###################\n", rooms, "\n###################");
       io.to(roomId).emit("user_joined", {
         user: rooms[roomId], //user in room
         roomId,
@@ -39,9 +39,10 @@ function initializeSocket(server) {
         rooms[roomId] = rooms[roomId].filter(
           (user) => user.user_id !== users.user_id
         );
+        // console.log( "^^^^^^^^^^^^^^^^^^^\n", rooms, "\n^^^^^^^^^^^^^^^^^^^");
         io.to(roomId).emit("user_joined", {
           user: rooms[roomId],
-          roomId
+          roomId,
         });
       }
     });
@@ -73,7 +74,7 @@ function initializeSocket(server) {
 
     // เมื่อผู้ใช้ตัดการเชื่อมต่อ
     socket.on("disconnect", () => {
-      // console.log(`A user disconnected: ${socket.id}`);
+      console.log(`A user disconnected: ${socket.id}`);
     });
   });
 }
