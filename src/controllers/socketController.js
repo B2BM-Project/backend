@@ -9,10 +9,7 @@ function initializeSocket(server) {
   });
 
   const rooms = {};
-  const readyList = {
-    user : [],
-    status : ""
-  };
+ 
   io.on("connection", (socket) => {
     // console.log("A user connected:", socket.id);
 
@@ -21,23 +18,30 @@ function initializeSocket(server) {
       if (!rooms[roomId]) {
         rooms[roomId] = [];
       }
-      if (!rooms[roomId].some((user) => JSON.stringify(user) === JSON.stringify(users))) {
+      users.ready_status = false;
+      if (!rooms[roomId].some(
+          (existingUser) => existingUser.user_id === users.user_id
+        )
+      ) {
         rooms[roomId].push(users);
       }
       socket.join(roomId);
       // console.log(`User ${socket.id} joined room ${roomId}`);
+      console.log(rooms, "###################");
       io.to(roomId).emit("user_joined", {
         user: rooms[roomId], //user in room
         roomId,
-
       });
     });
 
     socket.on("leave_room", (roomId, users) => {
       if (rooms[roomId]) {
-        rooms[roomId] = rooms[roomId].filter((user) => user.user_id !== users.user_id);
+        rooms[roomId] = rooms[roomId].filter(
+          (user) => user.user_id !== users.user_id
+        );
         io.to(roomId).emit("user_joined", {
           user: rooms[roomId],
+          roomId
         });
       }
     });
@@ -45,14 +49,25 @@ function initializeSocket(server) {
     // เมื่อผู้ใช้เปลี่ยนสถานะเป็น Ready หรือ Unready
     socket.on("set_ready_status", ({ roomId, user, status }) => {
       console.log(
-        `User ${user.username} in room ${roomId} is now ${status ? "Ready" : "Unready"}`
+        `User ${user.username} in room ${roomId} is now ${
+          status ? "Ready" : "Unready"
+        }`
       );
-      if (!readyList[roomId].some((user) => JSON.stringify(user) === JSON.stringify(users))) {
-        readyList[roomId].push(users);
+      // user.ready_status = status;
+      const userIndex = rooms[roomId].findIndex(
+        (u) => u.user_id === user.user_id
+      );
+      if (userIndex !== -1) {
+        rooms[roomId][userIndex].ready_status = status;
+      } else {
+        console.error(
+          `User with id ${user.user_id} not found in room ${roomId}`
+        );
       }
-      io.to(roomId).emit("update_ready_status", { 
-        user, 
-        status 
+      console.log("*********************\n", rooms, "\n*********************");
+      
+      io.to(roomId).emit("update_ready_status", {
+        user: rooms[roomId],
       });
     });
 
