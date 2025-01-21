@@ -27,7 +27,7 @@ function initializeSocket(server) {
       }
       socket.join(roomId);
       // console.log(`User ${socket.id} joined room ${roomId}`);
-      // console.log( "###################\n", rooms, "\n###################");
+      console.log( "###################\n", rooms, "\n###################");
       io.to(roomId).emit("user_joined", {
         user: rooms[roomId], //user in room
         roomId,
@@ -39,7 +39,7 @@ function initializeSocket(server) {
         rooms[roomId] = rooms[roomId].filter(
           (user) => user.user_id !== users.user_id
         );
-        // console.log( "^^^^^^^^^^^^^^^^^^^\n", rooms, "\n^^^^^^^^^^^^^^^^^^^");
+        console.log( "^^^^^^^^^^^^^^^^^^^\n", rooms, "\n^^^^^^^^^^^^^^^^^^^");
         io.to(roomId).emit("user_joined", {
           user: rooms[roomId],
           roomId,
@@ -65,16 +65,11 @@ function initializeSocket(server) {
           `User with id ${user.user_id} not found in room ${roomId}`
         );
       }
-      console.log("*********************\n", rooms, "\n*********************");
+      // console.log("*********************\n", rooms, "\n*********************");
       
       io.to(roomId).emit("update_ready_status", {
         user: rooms[roomId],
       });
-    });
-
-    // เมื่อผู้ใช้ตัดการเชื่อมต่อ
-    socket.on("disconnect", () => {
-      console.log(`A user disconnected: ${socket.id}`);
     });
   });
 }
