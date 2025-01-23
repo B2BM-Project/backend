@@ -8,6 +8,8 @@ const room = require('../controllers/roomController')
 const play = require('../controllers/playtask')
 const rank = require('../controllers/ranking')
 const { upload, uploadFiles, showPublicFiles } = require('../controllers/taskController');
+const card = require('../controllers/card');
+
 
 
 //////------------------   start USER ----------------------------- ///////////
@@ -43,6 +45,8 @@ router.post('/upload', upload.array('multiFile', 2), uploadFiles);
 
 // Route for showing files in the public directory
 router.get('/public', showPublicFiles);
+
+router.get('/card', card.cardDetail);
 
 //////------------------   end USER ----------------------------- ///////////
 
