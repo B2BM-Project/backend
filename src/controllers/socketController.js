@@ -9,7 +9,9 @@ function initializeSocket(server) {
   });
 
   const rooms = {};
- 
+  let countdownEndTime = {};
+  let intervalId = {}; // เก็บค่า setInterval
+
   io.on("connection", (socket) => {
     // console.log("A user connected:", socket.id);
 
@@ -19,7 +21,8 @@ function initializeSocket(server) {
         rooms[roomId] = [];
       }
       users.ready_status = false;
-      if (!rooms[roomId].some(
+      if (
+        !rooms[roomId].some(
           (existingUser) => existingUser.user_id === users.user_id
         )
       ) {
@@ -27,11 +30,15 @@ function initializeSocket(server) {
       }
       socket.join(roomId);
       // console.log(`User ${socket.id} joined room ${roomId}`);
-      console.log( "###################\n", rooms, "\n###################");
+      // console.log("###################\n", rooms, "\n###################");
       io.to(roomId).emit("user_joined", {
         user: rooms[roomId], //user in room
         roomId,
       });
+      // Timer countdown
+      if (countdownEndTime) {
+        socket.emit("timer_started", { countdownEndTime }); // ส่งเวลาสิ้นสุดกลับไปยัง client
+      }
     });
 
     socket.on("leave_room", (roomId, users) => {
@@ -39,7 +46,7 @@ function initializeSocket(server) {
         rooms[roomId] = rooms[roomId].filter(
           (user) => user.user_id !== users.user_id
         );
-        console.log( "^^^^^^^^^^^^^^^^^^^\n", rooms, "\n^^^^^^^^^^^^^^^^^^^");
+        // console.log("^^^^^^^^^^^^^^^^^^^\n", rooms, "\n^^^^^^^^^^^^^^^^^^^");
         io.to(roomId).emit("user_joined", {
           user: rooms[roomId],
           roomId,
@@ -66,10 +73,38 @@ function initializeSocket(server) {
         );
       }
       // console.log("*********************\n", rooms, "\n*********************");
-      
+
       io.to(roomId).emit("update_ready_status", {
         user: rooms[roomId],
       });
+    });
+    // กำหนดเวลาเริ่มนับถอยหลัง
+    socket.on("start_timer", (durationInSeconds, start, initialTime, roomId) => {
+      if (intervalId[roomId]) {
+        clearInterval(intervalId[roomId]); // ล้าง interval เก่า
+      }
+
+      if (start) {
+        // เริ่มนับเวลาใหม่
+        countdownEndTime[roomId] = Date.now() + durationInSeconds * 1000;
+
+        intervalId[roomId] = setInterval(() => {
+          const remainingTime = Math.max(
+            (countdownEndTime[roomId] - Date.now()) / 1000,
+            0
+          );
+
+          io.to(roomId).emit("update_remaining_time", { remainingTime });
+
+          // หยุด timer เมื่อหมดเวลา
+          if (remainingTime <= 0) {
+            clearInterval(intervalId[roomId]);
+          }
+        }, 1000);
+      } else {
+        // รีเซ็ตเวลา (ส่ง remainingTime = durationInSeconds กลับไป)
+        io.to(roomId).emit("update_remaining_time", { remainingTime: initialTime });
+      }
     });
   });
 }
