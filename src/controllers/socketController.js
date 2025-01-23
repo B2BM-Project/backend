@@ -97,8 +97,11 @@ function initializeSocket(server) {
           io.to(roomId).emit("update_remaining_time", { remainingTime });
 
           // หยุด timer เมื่อหมดเวลา
-          if (remainingTime <= 0) {
+          if (remainingTime <= 0 && start == true) {
             clearInterval(intervalId[roomId]);
+            delete intervalId[roomId];
+            delete countdownEndTime[roomId];
+            io.to(roomId).emit("time_up");
           }
         }, 1000);
       } else {
