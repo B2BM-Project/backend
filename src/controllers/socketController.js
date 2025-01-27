@@ -93,9 +93,7 @@ function initializeSocket(server) {
             (countdownEndTime[roomId] - Date.now()) / 1000,
             0
           );
-
-          io.to(roomId).emit("update_remaining_time", { remainingTime });
-
+          io.to(roomId).emit("update_remaining_time", { remainingTime, start });
           // หยุด timer เมื่อหมดเวลา
           if (remainingTime <= 0 && start == true) {
             clearInterval(intervalId[roomId]);
