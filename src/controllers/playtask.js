@@ -26,6 +26,19 @@ exports.submitFlag = async (req, res) => {
             return res.status(400).json({ message: 'Invalid token data' });
         }
 
+        // ✅ ดึง submit list ของ user ว่าเคยส่ง Task_id นี้ไปแล้วหรือยัง
+        const [attendance] = await db.execute(
+            'SELECT submit FROM attendance_to WHERE User_id = ? AND Room_id = ?',
+            [userId, roomId]
+        );
+
+        let submittedTasks = attendance.length > 0 && attendance[0].submit ? attendance[0].submit.split(',') : [];
+
+        // ✅ ตรวจสอบว่ามี Task_id นี้ใน submit list หรือยัง
+        if (submittedTasks.includes(Task_id.toString())) {
+            return res.status(400).json({ message: 'You have already submitted this flag!' });
+        }
+
         // ตรวจสอบ flag ในฐานข้อมูลและ Task_id
         const [task] = await db.execute(
             'SELECT Task_id, score FROM task WHERE Task_id = ? AND flag = ? AND Room_id = ?',
@@ -38,10 +51,14 @@ exports.submitFlag = async (req, res) => {
 
         const { score: scoreToAdd } = task[0];
 
-        // อัปเดตคะแนนในตาราง attendance_to
+        // ✅ เพิ่ม Task_id ลงไปใน submit list
+        submittedTasks.push(Task_id.toString());
+        const updatedSubmitList = submittedTasks.join(',');
+
+        // ✅ อัปเดตคะแนนและ submit list ใน attendance_to
         const [result] = await db.execute(
-            'UPDATE attendance_to SET Score = Score + ? WHERE User_id = ? AND Room_id = ?',
-            [scoreToAdd, userId, roomId]
+            'UPDATE attendance_to SET Score = Score + ?, submit = ? WHERE User_id = ? AND Room_id = ?',
+            [scoreToAdd, updatedSubmitList, userId, roomId]
         );
 
         if (result.affectedRows === 0) {
@@ -52,6 +69,7 @@ exports.submitFlag = async (req, res) => {
             message: 'Flag is correct! Score updated successfully',
             Task_id: Task_id,
             scoreAdded: scoreToAdd,
+            updatedSubmitList
         });
     } catch (err) {
         console.error('Error processing flag:', err);
