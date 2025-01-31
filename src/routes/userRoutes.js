@@ -7,7 +7,7 @@ const detail = require('../controllers/detail')
 const room = require('../controllers/roomController')
 const play = require('../controllers/playtask')
 const rank = require('../controllers/ranking')
-const { upload, uploadFiles, showPublicFiles } = require('../controllers/taskController');
+const { upload, uploadFiles, showPublicFiles , updateTask, deleteTask , downloadFilesByTaskId} = require('../controllers/taskController');
 const card = require('../controllers/card');
 
 
@@ -27,26 +27,41 @@ router.post('/logout', create_login.logoutUser);
 // เส้นทางสำหรับสร้าง room
 router.post('/rooms', room.createRoom); // ต้องใส่รหัส flag ก่อนนำขึ้น db 
 
-// ยังไม่ได้สร้าง edit room ต้องเช็คสิทธิ์ก่อนถึงจะ edit ได้
-
 // เส้นทางสำหรับหา tasks ของห้องด้วย Room_id
 router.get('/rooms/:id/tasks', room.getTasksByRoomId); // ต้องเพิ่ม เช็ค สิทธิ์ เเละ เพิ่ม roomid เข้าไปใน token สำหรับ api นี้
 
-// Route สำหรับดึง Task ของ Room โดยใช้ Room_name และ Room_password
-router.post('/rooms/tasks', room.getTasksByRoomNameAndPassword);
+// Route สำหรับดึง Task ของ Room โดยใช้ Room_id และ Room_password join 
+router.post('/rooms/tasks', room.getTasksByRoomIdAndPassword);
 
 //show room
 router.get('/rooms/showall', room.getAllRooms);
 
+//show room
+router.get('/rooms/showroomscore/:room_id', room.getRoomScores);
+
+// delete room
+router.delete('/room', room.deleteRoom);
+
+
 // Route ส่ง flag
 router.post('/submitflag', play.submitFlag); //ยังติดเรื่องต้องส่ง id ของ task ตอนส่ง เเละ เข้ารหัส ก่อนนำไปเช็ค flag
 
+// create task 
 router.post('/upload', upload.array('multiFile', 2), uploadFiles);
+// update task
+router.post('/update-task', upload.array('multiFile', 2), updateTask);
+// delete task
+router.delete('/delete-task', deleteTask);
+
+router.get('/download/task/:task_id', downloadFilesByTaskId);
+
 
 // Route for showing files in the public directory
 router.get('/public', showPublicFiles);
 
 router.get('/card', card.cardDetail);
+
+
 
 //////------------------   end USER ----------------------------- ///////////
 

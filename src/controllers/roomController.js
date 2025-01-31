@@ -143,14 +143,12 @@ exports.getTasksByRoomId = async (req, res) => {
 };
 
 // ดึง tasks โดยอ้างอิง Room_name และ Room_password
-exports.getTasksByRoomNameAndPassword = async (req, res) => {
-  const { Room_name, Room_password } = req.body;
+exports.getTasksByRoomIdAndPassword = async (req, res) => {
+  const { Room_id, Room_password } = req.body;
   const token = req.headers.authorization?.split(" ")[1];
 
-  if (!Room_name || !Room_password) {
-    return res
-      .status(400)
-      .json({ message: "Room_name and Room_password are required" });
+  if (!Room_id || !Room_password) {
+    return res.status(400).json({ message: "Room_id and Room_password are required" });
   }
 
   if (!token) {
@@ -166,58 +164,53 @@ exports.getTasksByRoomNameAndPassword = async (req, res) => {
       return res.status(400).json({ message: "Invalid user ID in token" });
     }
 
-    // ตรวจสอบ Room_name และ Room_password
+    // ตรวจสอบว่า Room_id และ Room_password ถูกต้องหรือไม่
     const [room] = await pool.query(
-      "SELECT * FROM room_list WHERE Room_name = ? AND Room_password = ?",
-      [Room_name, Room_password]
+      "SELECT * FROM room_list WHERE Room_id = ? AND Room_password = ?",
+      [Room_id, Room_password]
     );
 
     if (room.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Room not found or invalid credentials" });
+      return res.status(404).json({ message: "Room not found or invalid password" });
     }
-
-    const roomId = room[0].Room_id;
 
     // ตรวจสอบว่า user มีอยู่ใน attendance_to หรือไม่
     const [attendance] = await pool.query(
       "SELECT * FROM attendance_to WHERE Room_id = ? AND User_id = ?",
-      [roomId, userId]
+      [Room_id, userId]
     );
 
     // ถ้าไม่มี user ใน attendance_to ให้เพิ่มเข้าไป
     if (attendance.length === 0) {
       await pool.query(
-        "INSERT INTO attendance_to (Room_id, User_id, Score ) VALUES (?, ?, ?)",
-        [roomId, userId, 0]
+        "INSERT INTO attendance_to (Room_id, User_id, Score) VALUES (?, ?, ?)",
+        [Room_id, userId, 0]
       );
     }
 
-    // สร้าง roomToken ใหม่ที่มี roomId ที่อัปเดต
-    const roomToken = createToken({ userId, Room_id: roomId });
+    // สร้าง roomToken ใหม่ที่มี Room_id
+    const roomToken = createToken({ userId, Room_id });
 
     // ดึง tasks ที่เกี่ยวข้องกับ Room_id
-    const [tasks] = await pool.query("SELECT * FROM task WHERE Room_id = ?", [
-      roomId,
-    ]);
+    const [tasks] = await pool.query(
+      "SELECT * FROM task WHERE Room_id = ?",
+      [Room_id]
+    );
 
     res.status(200).json({
       message: "Tasks retrieved successfully",
       tasks,
-      roomToken, // ส่ง roomToken ใหม่ที่อัปเดต
+      roomToken, // ส่ง roomToken ใหม่
     });
   } catch (error) {
-    console.error(
-      "Error fetching tasks by Room_name and Room_password:",
-      error
-    );
+    console.error("Error fetching tasks by Room_id and Room_password:", error);
     res.status(500).json({
       message: "Error fetching tasks",
       error: error.message,
     });
   }
 };
+
 
 // ดึงข้อมูลห้องทั้งหมด
 exports.getAllRooms = async (req, res) => {
@@ -227,5 +220,75 @@ exports.getAllRooms = async (req, res) => {
     } catch (error) {
         console.error('Error fetching rooms:', error);
         res.status(500).json({ message: 'Error fetching rooms', error: error.message });
+    }
+};
+
+exports.deleteRoom = async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Authorization token is required" });
+    }
+
+    try {
+        // ตรวจสอบ JWT และดึง userId กับ Room_id
+        const decoded = await verifyToken(token);
+        const userId = decoded.userId;
+        const roomId = decoded.Room_id; // ดึง Room_id จาก token
+
+        if (!userId || !roomId) {
+            return res.status(400).json({ message: "Invalid token: Missing user ID or Room ID" });
+        }
+
+        // ตรวจสอบว่า user เป็นเจ้าของห้องหรือไม่
+        const [room] = await pool.query(
+            "SELECT * FROM room_list WHERE Room_id = ? AND owner = ?",
+            [roomId, userId]
+        );
+
+        if (room.length === 0) {
+            return res.status(403).json({ message: "You are not authorized to delete this room or room does not exist" });
+        }
+
+        // ลบ Tasks ที่เกี่ยวข้องกับห้องนี้
+        await pool.query("DELETE FROM task WHERE Room_id = ?", [roomId]);
+
+        // ลบ Attendance (คนที่เข้าร่วมห้องนี้)
+        await pool.query("DELETE FROM attendance_to WHERE Room_id = ?", [roomId]);
+
+        // ลบห้องจาก room_list
+        await pool.query("DELETE FROM room_list WHERE Room_id = ?", [roomId]);
+
+        res.status(200).json({ message: "Room deleted successfully" });
+
+    } catch (error) {
+        console.error("Error deleting room:", error);
+        res.status(500).json({ message: "Error deleting room", error: error.message });
+    }
+};
+
+
+
+// ดึงคะแนนของทุกคนใน room เดียวกัน
+exports.getRoomScores = async (req, res) => {
+    const { room_id } = req.params;
+
+    try {
+        const [result] = await pool.execute(`
+            SELECT u.user_id, u.username, a.score 
+            FROM users u
+            JOIN attendance_to a ON u.user_id = a.user_id
+            WHERE a.room_id = ? 
+            ORDER BY a.score DESC`, [room_id]); // เรียงคะแนนจากมากไปน้อย
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: "No users found in this room" });
+        }
+
+        res.status(200).json({ users: result });
+
+    } catch (error) {
+        console.error("Error fetching room scores:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
