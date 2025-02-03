@@ -292,3 +292,51 @@ exports.getRoomScores = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
+exports.updateRoom = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+      return res.status(401).json({ message: "Authorization token is required" });
+  }
+
+  try {
+      // ตรวจสอบ JWT และดึง userId กับ Room_id
+      const decoded = await verifyToken(token);
+      const userId = decoded.userId;
+      const roomId = decoded.Room_id;
+
+      if (!userId || !roomId) {
+          return res.status(400).json({ message: "Invalid token: Missing user ID or Room ID" });
+      }
+
+      // ตรวจสอบว่า user เป็นเจ้าของห้องหรือไม่
+      const [room] = await pool.query(
+          "SELECT * FROM room_list WHERE Room_id = ? AND owner = ?",
+          [roomId, userId]
+      );
+
+      if (room.length === 0) {
+          return res.status(403).json({ message: "You are not authorized to update this room or room does not exist" });
+      }
+
+      // ดึงข้อมูลจาก request body
+      const { Room_name, Room_description, Room_password,  duration } = req.body;
+
+      // อัปเดตค่าต่าง ๆ ที่อนุญาตให้แก้ไขได้
+      await pool.query(
+          `UPDATE room_list SET 
+              Room_name = COALESCE(?, Room_name),
+              Room_description = COALESCE(?, Room_description),
+              Room_password = COALESCE(?, Room_password),
+              duration = COALESCE(?, duration)
+           WHERE Room_id = ?`,
+          [Room_name, Room_description, Room_password,  duration, roomId]
+      );
+
+      res.status(200).json({ message: "Room updated successfully" });
+  } catch (error) {
+      console.error("Error updating room:", error);
+      res.status(500).json({ message: "Error updating room", error: error.message });
+  }
+};
