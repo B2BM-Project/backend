@@ -115,7 +115,7 @@ exports.getTasksByRoomId = async (req, res) => {
     );
     // ดึง tasks ทั้งหมดที่เกี่ยวข้องกับ Room_id
     const [tasks] = await pool.query(
-      "SELECT Task_id, Task_title, Task_description, Task_file, score, Room_id FROM task WHERE Room_id = ?",
+      "SELECT * FROM task WHERE Room_id = ?",
       [id]
     );
     // แปลง Task_file ให้เป็น Array

@@ -25,7 +25,9 @@ const upload = multer({ storage });
 
 // Controller for uploading files
 const uploadFiles = async (req, res, next) => {
+    console.log('Request received:', req.files); 
     console.log('Request received:', req.body);  // Log the incoming request body
+    const submitData = JSON.parse(req.body.submitData); // แปลง JSON string กลับเป็น object
 
     // ตรวจสอบ Authorization header และดึง token
     const token = req.headers.authorization?.split(' ')[1];
@@ -54,7 +56,7 @@ const uploadFiles = async (req, res, next) => {
 
         console.log('Uploading files:', uploadedFiles);
 
-        if (!Task_title || !Task_description || !flag || !score) {
+        if (!submitData.title || !submitData.description || !submitData.flag || !submitData.score) {
             console.log('Missing required fields');
             return res.status(400).json({ error: 'Missing required fields' });
         }
@@ -62,7 +64,7 @@ const uploadFiles = async (req, res, next) => {
         const filesString = uploadedFiles.join(',');
 
         const query = `INSERT INTO task (Task_title, Task_description, flag, Task_file,url, score, Room_id) VALUES (?, ?, ?,?, ?, ?, ?)`;
-        const values = [Task_title, Task_description, flag, filesString , url || null, score, Room_id];
+        const values = [submitData.title, submitData.description, submitData.flag, filesString , submitData.link || null, submitData.score, Room_id];
 
         try {
             const [results] = await db.execute(query, values);
@@ -113,8 +115,9 @@ const updateTask = async (req, res) => {
         if (!Room_id) {
             return res.status(400).json({ error: 'Room_id is missing in token' });
         }
-
-        const { Task_id, Task_title, Task_description, flag, score } = req.body;
+        console.log("request body: ",req.body);
+        console.log("request files: ",req.files);
+        const { Task_id, Task_title, Task_description, flag, score, url } = req.body;
 
         if (!Task_id ) {
             console.log('Missing required fields for updating task');
@@ -152,8 +155,8 @@ const updateTask = async (req, res) => {
             }
         }
 
-        const query = `UPDATE task SET Task_title = ?, Task_description = ?, flag = ?, score = ?, Task_file = ? WHERE Task_id = ? AND Room_id = ?`;
-        const values = [Task_title, Task_description, flag, score, filesString, Task_id, Room_id];
+        const query = `UPDATE task SET Task_title = ?, Task_description = ?, flag = ?, score = ?, Task_file = ?, url = ? WHERE Task_id = ? AND Room_id = ?`;
+        const values = [Task_title, Task_description, flag, score, filesString, url, Task_id, Room_id];
 
         try {
             const [results] = await db.execute(query, values);
@@ -196,8 +199,8 @@ const deleteTask = async (req, res) => {
         if (!Room_id) {
             return res.status(400).json({ error: 'Room_id is missing in token' });
         }
-
-        const { Task_id } = req.body;
+        console.log("req.body:", req.body);
+        const  Task_id  = req.body.taskId;
 
         if (!Task_id) {
             console.log('Missing Task_id for deletion');

@@ -49,7 +49,7 @@ router.post('/submitflag', play.submitFlag); //ยังติดเรื่อ
 // create task 
 router.post('/upload', upload.array('multiFile', 2), uploadFiles);
 // update task
-router.post('/update-task', upload.array('multiFile', 2), updateTask);
+router.put('/update-task', upload.array('multiFile', 2), updateTask);
 // delete task
 router.delete('/delete-task', deleteTask);
 
