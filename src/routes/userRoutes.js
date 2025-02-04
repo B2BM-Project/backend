@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const create_login = require('../controllers/create_login');
+const { upload2} = require('../controllers/create_login');
 const test = require('../controllers/test')
 const propositionController = require('../controllers/proposition')
 const detail = require('../controllers/detail')
 const room = require('../controllers/roomController')
 const play = require('../controllers/playtask')
 const rank = require('../controllers/ranking')
+
 const { upload, uploadFiles, showPublicFiles , updateTask, deleteTask , downloadFilesByTaskId} = require('../controllers/taskController');
 const card = require('../controllers/card');
+const authMiddleware = require('../middleware/authMiddleware');
 
 
 
@@ -32,6 +35,9 @@ router.get('/rooms/:id/tasks', room.getTasksByRoomId); // ต้องเพิ�
 
 // Route สำหรับดึง Task ของ Room โดยใช้ Room_id และ Room_password join 
 router.post('/rooms/tasks', room.getTasksByRoomIdAndPassword);
+
+// update room
+router.put('/rooms', room.updateRoom);
 
 //show room
 router.get('/rooms/showall', room.getAllRooms);
@@ -75,8 +81,15 @@ router.get('/card', card.cardDetail);
 // เส้นทางสำหรับ ดึงuser ผ่าน token
 router.get('/user/me', create_login.getUserByToken);
 
+// เส้นทาง update user
+router.put('/users', upload2.single('profile_img'), create_login.updateUser); // api upload img เเละ update user
+
+// เส้นทางดึงรูป profile
+router.get('/user/meimg', create_login.getUserProfileImg);// ดึงรูปจากคนที่ login อยู่
+
 // เส้นทางหา user ด้วย id
 router.get('/users/:id', create_login.getUserById);
+
 
 // เส้นทางหา user ด้วย id
 router.get('/ranking', rank.getRanking);
@@ -88,10 +101,10 @@ router.get('/verify', create_login.verifyTokenHandler);
 // เส้นทางสำหรับ proposition ทั้งหมด 
 router.get('/proposition', propositionController.getAllPropositions);
 router.get('/proposition/:id', propositionController.getPropositionById);
-router.post('/proposition', propositionController.createProposition);  //  สร้างได้ เเต่เขียนไม่ดีเลยทำงานช้า
+router.post('/proposition', propositionController.createProposition);  
 router.put('/proposition/:id', propositionController.updateProposition);
 router.delete('/proposition/:id', propositionController.deleteProposition);
-router.post('/proposition/checkflag', propositionController.checkFlag); //ต้องเเก้ให้ดึง user_id จาก token เเล้วเอามาใช้ เเละ ตอนส่งตอนนี้ยังต้องส่ง id ตามมาด้วย // ล่าสุด ส่ง flag ไม่ได้
+router.post('/proposition/checkflag', propositionController.checkFlag); // เหลือห้ามส่งซ้ำ
 
 
 // เส้นทางของ detail บทเรียน

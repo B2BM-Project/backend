@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 const { createToken, verifyToken, invalidateToken } = require('./jwtHelper');
 const pool = require('../config/database'); // ใช้ pool แทน connection
+const multer = require('multer');
+const path = require('path');
 
 // ฟังก์ชันตรวจสอบรูปแบบอีเมล
 const isValidEmail = (email) => {
@@ -37,8 +39,8 @@ const createUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         await pool.query(
-            "INSERT INTO users (username, password, email) VALUES (?, ?, ?)",
-            [username, hashedPassword, email,]
+            "INSERT INTO users (username, password, email, total_score) VALUES (?, ?, ?,?)",
+            [username, hashedPassword, email,0]
         );
 
         return res.status(201).json({ message: 'User created successfully.' });
@@ -191,12 +193,113 @@ const getUserByToken = async (req, res) => {
     }
 };
 
-// เพิ่มฟังก์ชันใหม่ใน exports
+
+
+// ตั้งค่า multer ด้วย memoryStorage เพื่อเก็บไฟล์ใน buffer
+const upload2 = multer({ storage: multer.memoryStorage() }); 
+
+// updateUser ฟังก์ชันสำหรับอัปเดตข้อมูลผู้ใช้
+const updateUser = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]; // ดึง JWT จาก Header
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization token is required' });
+    }
+
+    try {
+        const decoded = await verifyToken(token);  // ตรวจสอบ JWT
+        const userId = decoded.userId;
+        const { display_name, password, certificate_name } = req.body;
+        const profile_img = req.file; // ได้รับไฟล์จากการอัปโหลด
+
+        // สร้าง array เก็บค่าที่จะอัปเดต
+        let fieldsToUpdate = [];
+        let values = [];
+
+        if (display_name !== undefined) {
+            fieldsToUpdate.push("display_name = ?");
+            values.push(display_name);
+        }
+
+        if (profile_img !== undefined) {
+            // อ่านไฟล์และแปลงเป็น Buffer
+            const fileBuffer = profile_img.buffer; // ได้บัฟเฟอร์ของไฟล์ที่อัปโหลด
+
+            fieldsToUpdate.push("profile_img = ?");
+            values.push(fileBuffer); // เก็บบัฟเฟอร์ของไฟล์ลงในฐานข้อมูล
+        }
+
+        if (password !== undefined) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            fieldsToUpdate.push("password = ?");
+            values.push(hashedPassword);
+        }
+
+        if (certificate_name !== undefined) {
+            fieldsToUpdate.push("certificate_name = ?");
+            values.push(certificate_name);
+        }
+
+        if (fieldsToUpdate.length === 0) {
+            return res.status(400).json({ message: "No valid fields to update." });
+        }
+
+        values.push(userId);  // ใส่ userId ที่จะอัปเดตในฐานข้อมูล
+        const query = `UPDATE users SET ${fieldsToUpdate.join(", ")} WHERE user_id = ?`;
+
+        await pool.query(query, values);  // ทำการ query ไปยังฐานข้อมูล
+
+        return res.status(200).json({ message: "User updated successfully." });
+    } catch (err) {
+        console.error("Error updating user:", err);
+        return res.status(500).json({ message: "Error processing request." });
+    }
+};
+
+
+
+const getUserProfileImg = async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1]; // ดึง JWT จาก Header
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization token is required' });
+    }
+    const decoded = await verifyToken(token);  // ตรวจสอบ JWT
+    const userId = decoded.userId;
+    
+    try {
+        const query = 'SELECT profile_img FROM users WHERE user_id = ?';
+        const [result] = await pool.query(query, [userId]);
+
+        if (result.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const profileImg = result[0].profile_img;
+
+        if (!profileImg) {
+            return res.status(404).json({ message: 'Profile image not found' });
+        }
+
+        // ตรวจสอบประเภทของไฟล์ (ในที่นี้สมมุติเป็น image/png)
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', 'attachment; filename=profile-image.png');
+        res.send(profileImg); // ส่งไฟล์ออกไป
+
+    } catch (err) {
+        console.error("Error retrieving profile image:", err);
+        return res.status(500).json({ message: "Error processing request." });
+    }
+};
+
+
+// เพิ่มฟังก์ชัน getUserProfileImg ใน exports
 module.exports = {
     createUser,
     loginUser,
     logoutUser,
     verifyTokenHandler,
     getUserById,
-    getUserByToken, // เพิ่มฟังก์ชันนี้
+    getUserByToken,
+    updateUser,
+    upload2,
+    getUserProfileImg
 };
