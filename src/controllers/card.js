@@ -6,7 +6,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 1',
             description: 'Learn the basics of cybersecurity.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 2,
@@ -14,7 +14,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 2',
             description: 'Challenge your skills with advanced problems.',
             img_path: 'https://www.foley.com/wp-content/uploads/2024/08/cybersecuritylock1680x680.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 3,
@@ -22,7 +22,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 3',
             description: 'Dive into cryptographic challenges.',
             img_path: 'https://www.mckinsey.com/spContent/bespoke/tech-trends-2024-hero-nav/techtrends-hero-desktop.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 4,
@@ -30,7 +30,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 4',
             description: 'Explore web security and vulnerabilities.',
             img_path: 'https://cdn.pixabay.com/photo/2021/08/04/13/06/software-developer-6521720_640.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 5,
@@ -38,7 +38,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 5',
             description: 'Strengthen your problem-solving abilities.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 6,
@@ -46,7 +46,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 6',
             description: 'Learn binary exploitation techniques.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 7,
@@ -54,7 +54,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 1',
             description: 'Learn the basics of cybersecurity.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 8,
@@ -62,7 +62,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 2',
             description: 'Challenge your skills with advanced problems.',
             img_path: 'https://www.foley.com/wp-content/uploads/2024/08/cybersecuritylock1680x680.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 9,
@@ -70,7 +70,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 3',
             description: 'Dive into cryptographic challenges.',
             img_path: 'https://www.mckinsey.com/spContent/bespoke/tech-trends-2024-hero-nav/techtrends-hero-desktop.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 10,
@@ -78,7 +78,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 4',
             description: 'Explore web security and vulnerabilities.',
             img_path: 'https://cdn.pixabay.com/photo/2021/08/04/13/06/software-developer-6521720_640.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 11,
@@ -86,7 +86,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 5',
             description: 'Strengthen your problem-solving abilities.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 12,
@@ -94,7 +94,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 6',
             description: 'Learn binary exploitation techniques.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 13,
@@ -102,7 +102,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 1',
             description: 'Learn the basics of cybersecurity.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 14,
@@ -110,7 +110,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 2',
             description: 'Challenge your skills with advanced problems.',
             img_path: 'https://www.foley.com/wp-content/uploads/2024/08/cybersecuritylock1680x680.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 15,
@@ -118,7 +118,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 3',
             description: 'Dive into cryptographic challenges.',
             img_path: 'https://www.mckinsey.com/spContent/bespoke/tech-trends-2024-hero-nav/techtrends-hero-desktop.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 16,
@@ -126,7 +126,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 4',
             description: 'Explore web security and vulnerabilities.',
             img_path: 'https://cdn.pixabay.com/photo/2021/08/04/13/06/software-developer-6521720_640.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 17,
@@ -134,7 +134,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 5',
             description: 'Strengthen your problem-solving abilities.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
         {
             id: 18,
@@ -142,7 +142,7 @@ const cardDetail = (req, res) => {
             title: 'Beginer 6',
             description: 'Learn binary exploitation techniques.',
             img_path: 'https://online.stanford.edu/sites/default/files/styles/widescreen_tiny/public/2019-07/hack-lab_INTLPOL268.jpg',
-            route_path: '/topic-detail'
+            route_path: '/proposition/id'
         },
     ];
 

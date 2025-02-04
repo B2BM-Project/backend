@@ -2,12 +2,13 @@ const db = require('../config/database');
 const bcrypt = require('bcrypt');
 
 // ดึงข้อมูลทั้งหมด
-exports.getAllPropositions = (req, res) => {
-    const query = 'SELECT * FROM proposition';
-    db.query(query, (err, results) => {
-        if (err) return res.status(500).json({ error: err.message });
+exports.getAllPropositions = async (req, res) => {
+    try {
+        const [results] = await db.query('SELECT * FROM proposition'); // ใช้ await แทน callback
         res.json(results);
-    });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
 // ดึงข้อมูลเฉพาะ ID

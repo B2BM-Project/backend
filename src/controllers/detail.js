@@ -297,13 +297,10 @@ const data = [
         ],
         proposition: [
             {
-                sub: "โจทย์ ljfsljfsldjf;ajfljalfjal;jflasjlafslfjlsadjffjlsadfj;adj",
+                sub: "ทำการลงชื่อเข้าสู่ระบบด้วยการใช้ sql injection",
             },
             {
-                sub: "โจทย์ หดหกด1หกด16ห1ด6ดหกดดหาก่ดสหก",
-            },
-            {
-                sub: "โจทย์ lfa;sdlfjda;jfa;fja;sjfda;sjfllllllllllllllljkdfsjldfjlsjfldsjfldjfld",
+                sub: "หลังจากลงชื่อเข้าใช้สำเร็จนำ flag ที่ได้มาตอบ",
             }
         ]
     },

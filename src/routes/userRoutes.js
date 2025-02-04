@@ -88,10 +88,10 @@ router.get('/verify', create_login.verifyTokenHandler);
 // เส้นทางสำหรับ proposition ทั้งหมด 
 router.get('/proposition', propositionController.getAllPropositions);
 router.get('/proposition/:id', propositionController.getPropositionById);
-router.post('/proposition', propositionController.createProposition);  //  สร้างได้ เเต่เขียนไม่ดีเลยทำงานช้า
-router.put('/proposition/:id', propositionController.updateProposition);
-router.delete('/proposition/:id', propositionController.deleteProposition);
-router.post('/proposition/checkflag', propositionController.checkFlag); //ต้องเเก้ให้ดึง user_id จาก token เเล้วเอามาใช้ เเละ ตอนส่งตอนนี้ยังต้องส่ง id ตามมาด้วย // ล่าสุด ส่ง flag ไม่ได้
+// router.post('/proposition', propositionController.createProposition);  //  สร้างได้ เเต่เขียนไม่ดีเลยทำงานช้า
+// router.put('/proposition/:id', propositionController.updateProposition);
+// router.delete('/proposition/:id', propositionController.deleteProposition);
+// router.post('/proposition/checkflag', propositionController.checkFlag); //ต้องเเก้ให้ดึง user_id จาก token เเล้วเอามาใช้ เเละ ตอนส่งตอนนี้ยังต้องส่ง id ตามมาด้วย // ล่าสุด ส่ง flag ไม่ได้
 
 
 // เส้นทางของ detail บทเรียน
